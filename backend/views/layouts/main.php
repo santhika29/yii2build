@@ -18,7 +18,7 @@ FontAwesomeAsset::register($this);
  
 ?>
  
-             <?php $this->beginPage() ?>
+ <?php $this->beginPage() ?>
             
 <!DOCTYPE html>
  
@@ -44,19 +44,15 @@ initial-scale=1">
  
     <div class="wrap">
     
-    
 <?php
-            
+ 
   if (!Yii::$app->user->isGuest){
-  
-      //$is_admin = (PermissionHelpers::requireMinimumRole('Admin')) ? true : false ;
-      $is_admin = PermissionHelpers::requireMinimumRole('Admin');
-
       
+      $is_admin = PermissionHelpers::requireMinimumRole('Admin');
  
    NavBar::begin([
  
-    'brandLabel' => 'Yii 2 Build <i class="fa fa-plug"></i> Admin',
+    'brandLabel' => 'Yii 2 Built <i class="fa fa-plug"></i> Admin',
     'brandUrl' => Yii::$app->homeUrl,
     'options' => [
            'class' => 'navbar-inverse navbar-fixed-top',
@@ -67,60 +63,83 @@ initial-scale=1">
    
     NavBar::begin([
  
-      'brandLabel' => 'Yii 2 Build <i class="fa fa-plug"></i>',
+      'brandLabel' => 'Yii 2 Built <i class="fa fa-plug"></i>',
       'brandUrl' => Yii::$app->homeUrl,
       'options' => [
            'class' => 'navbar-inverse navbar-fixed-top',
       ],
   ]);
- 
-            
-            
-  $menuItems = [
-      ['label' => 'Home', 'url' => ['site/index']],
-  ];
-  }
-   
-  if (!Yii::$app->user->isGuest && $is_admin) {
- 
-      $menuItems[] = ['label' => 'Users', 'url' => ['user/index']];
-            
-      $menuItems[] = ['label' => 'Profiles', 'url' => ['profile/index']];
-            
-      $menuItems[] = ['label' => 'Roles', 'url' => ['role/index']];
-                
-      $menuItems[] = ['label' => 'User Types', 'url' => ['usertype/index']];
-           
-      $menuItems[] = ['label' => 'Statuses', 'url' => ['status/index']];
- 
-   }
+  
+  }  
   
   if (Yii::$app->user->isGuest) {
- 
-     $menuItems[] = ['label' => 'Login', 'url' => ['site/login']];
- 
-  } else {
- 
-      $menuItems[] = ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-                      'url' => ['/site/logout'],
-                      'linkOptions' => ['data-method' => 'post']
+                
+              $menuItemsLogOut[] = ['label' => 'Login', 'url' => ['site/login']];
+            
+            } else {
+                
+                $menuItemsLogOut[] = [
+                    'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                    'url' => ['/site/logout'],
+                    'linkOptions' => ['data-method' => 'post']
                 ];
- 
-  } 
-                                                                                                                  
-  echo Nav::widget([
- 
-      'options' => ['class' => 'navbar-nav navbar-right'],
-      'items' => $menuItems,
- 
-  ]);
- 
-  NavBar::end();
-
+            }     
+            
+            echo Nav::widget([
+                'options' => ['class' => 'navbar-nav navbar-right'],
+                'items' => $menuItemsLogOut
+            ]);
    
+  if (!Yii::$app->user->isGuest &&  $is_admin) {
+      
+     echo Nav::widget([
+                'options' => ['class' => 'navbar-nav navbar-right'],
+                'items' => [
+        
+                        ['label' => 'Users', 'items' => [
+                            ['label' => 'Users', 'url' => ['user/index']],
+                            ['label' => 'Profiles', 'url' => ['profile/index']],
+                            ['label' => 'Something else here', 'url' => ['#']],
+        ]],
+        
+                        ['label' => 'Support', 'items' => [
+                            ['label' => 'Support Requests', 'url' => ['content/index']],
+                            ['label' => 'Status Messages', 'url' => ['status-message/index']],
+                            ['label' => 'FAQ', 'url' => ['faq/index']],
+                            ['label' => 'FAQ Categories', 'url' => ['faq-category/index']],
+        ]],
+        
+                        ['label' => 'RBAC', 'items' => [
+                            ['label' => 'Roles', 'url' => ['role/index']],
+                            ['label' => 'User Types', 'url' => ['user-type/index']],
+                            ['label' => 'Statuses', 'url' => ['status/index']],
+        ]],
+        
+                        ['label' => 'Content', 'items' => [
+                            ['label' => 'Content', 'url' => ['content/index']],
+                            ['label' => 'Status Messages', 'url' => ['status-message/index']],
+                            ['label' => 'FAQ', 'url' => ['faq/index']],
+                            ['label' => 'FAQ Category', 'url' => ['faq-category/index']],
+        ]],
+        
+    ],
+    
+            ]);   
+ 
+   }
+   
+   $menuItems = [['label' => 'Home', 'url' => ['site/index']],
+            ];
+            
+   echo Nav::widget([
+                'options' => ['class' => 'navbar-nav navbar-right'],
+                'items' => $menuItems
+            ]); 
+  
+  NavBar::end();
+ 
 ?>
  
-         
 <div class="container">
  
 <?= Breadcrumbs::widget([
